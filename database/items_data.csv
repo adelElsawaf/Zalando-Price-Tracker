@@ -1,11 +1,5 @@
-Brand Name,Model Name,Item Color,Before Discount Price,After Discount Price,Currency,Date
-Nike Sportswear,AIR MAX 270 - Trainers,medium olive/black/total orange/white,159.95,79.95,€,2023-07-26
-Nike Sportswear,AIR MAX 270 - Trainers,medium olive/black/total orange/white,159.95,79.95,€,2023-07-26
-Nike Sportswear,AIR MAX 270 - Trainers,medium olive/black/total orange/white,159.95,79.95,€,2023-07-27
-Nike Sportswear,AIR MAX 270 - Trainers,medium olive/black/total orange/white,159.95,79.95,€,2023-07-27
-Nike Sportswear,AIR MAX 270 - Trainers,medium olive/black/total orange/white,159.95,79.95,€,2023-07-27
-Nike Sportswear,AIR MAX 270 - Trainers,medium olive/black/total orange/white,159.95,79.95,€,2023-07-27
-Nike Sportswear,AIR MAX 270 - Trainers,medium olive/black/total orange/white,159.95,79.95,€,2023-07-27
-Nike Sportswear,AIR MAX 270 - Trainers,medium olive/black/total orange/white,159.95,79.95,€,2023-07-27
-Nike Sportswear,AIR MAX 270 - Trainers,medium olive/black/total orange/white,159.95,79.95,€,2023-07-27
-Nike Sportswear,AIR MAX 270 - Trainers,medium olive/black/total orange/white,159.95,79.95,€,2023-07-27
+Brand Name,Model Name,Item Color,In Stock,Before Discount Price,After Discount Price,Currency,Date
+GT collection,LUXURY FLAT BEAD - Bracelet,blue,true,99.0,0.0,€,2023-07-29
+MYL BERLIN,LANGE - Gloves,rot,true,55.0,0.0,€,2023-07-29
+Nike Sportswear,AIR MAX 270 - Trainers,medium olive/black/total orange/white,false,159.95,79.95,€,2023-07-29
+Marc O'Polo,MOD JASPER 4D - Trainers,grey,true,99.95,69.95,€,2023-07-29

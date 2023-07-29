@@ -10,16 +10,21 @@ public class Price {
         setAfterDiscount(afterDiscount);
         setCurrency(currency);
     }
-    public Price(String beforeDiscountPriceMessage,String afterDiscountPriceMessage){
+
+    public Price(String beforeDiscountPriceMessage, String afterDiscountPriceMessage) {
         setBeforeDiscount(getPriceFromPriceMessage(beforeDiscountPriceMessage));
         setAfterDiscount(getPriceFromPriceMessage(afterDiscountPriceMessage));
         setCurrency(getCurrencyFromPriceMessage(beforeDiscountPriceMessage));
 
     }
-    public Price (String beforeDiscountPriceMessage)
-    {
+
+    public Price(String beforeDiscountPriceMessage) {
         setBeforeDiscount(getPriceFromPriceMessage(beforeDiscountPriceMessage));
         setCurrency(getCurrencyFromPriceMessage(beforeDiscountPriceMessage));
+    }
+
+    public Price() {
+
     }
 
     public double getBeforeDiscount() {
@@ -45,13 +50,26 @@ public class Price {
     public void setCurrency(String currency) {
         this.currency = currency;
     }
-    public static String getCurrencyFromPriceMessage(String priceMessage)
-    {
-        return priceMessage.split(" ")[1];
-    }
-    public static double getPriceFromPriceMessage(String priceMessage){
-       return Double.parseDouble(priceMessage.split(" ")[0].replace(",","."));
 
+    public static String getCurrencyFromPriceMessage(String priceMessage) {
+        return String.valueOf(priceMessage.charAt(priceMessage.length()-1));
+    }
+
+    public static double getPriceFromPriceMessage(String priceMessage) {
+        return Double.parseDouble(getDigitsFromString(priceMessage));
+    }
+
+    private static String getDigitsFromString(String sentence) {
+        String digits = "";
+        for (int letterIndex = 0; letterIndex < sentence.length(); letterIndex++) {
+            if (sentence.charAt(letterIndex) == ',') {
+                digits += '.';
+            }
+            if (sentence.charAt(letterIndex) >= '0' && sentence.charAt(letterIndex) <= '9') {
+                digits += sentence.charAt(letterIndex);
+            }
+        }
+        return digits;
     }
 
 

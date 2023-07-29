@@ -12,17 +12,18 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        ItemScraping scrape = new ItemScraping();
-        scrape.startScraping("https://en.zalando.de/nike-sportswear-air-max-270-trainers-ni112o00r-n11.html");
+        ItemScraping scrape = new ItemScraping("https://en.zalando.de/marc-opolo-mod-jasper-trainers-grey-ma312o03t-c11.html");
+        scrape.startScraping();
         CsvFile itemsFile = new CsvFile("database/items_data.csv");
         List<String> rowsData = new ArrayList<>();
-        if (!itemsFile.isExist() ) {
+        if (!itemsFile.isExist()) {
             itemsFile.create();
-            rowsData.add("Brand Name,Model Name,Item Color,Before Discount Price,After Discount Price,Currency,Date");
+            rowsData.add("Brand Name,Model Name,Item Color,In Stock,Before Discount Price,After Discount Price,Currency,Date");
         }
-        rowsData.add(scrape.getItem().getBrandName() +","+scrape.getItem().getModelName()+","+scrape.getItem().getColor()+","
-                +scrape.getItem().getPrice().getBeforeDiscount()+","+scrape.getItem().getPrice().getAfterDiscount()+","
-                +scrape.getItem().getPrice().getCurrency()+","+scrape.getDate().toString());
+        rowsData.add(scrape.getItem().getBrandName() + "," + scrape.getItem().getModelName() + "," + scrape.getItem().getColor() + "," +
+                scrape.getItem().getIsInStock() + "," + scrape.getItem().getPrice().getBeforeDiscount() + "," +
+                scrape.getItem().getPrice().getAfterDiscount() + ","
+                + scrape.getItem().getPrice().getCurrency() + "," + scrape.getDate().toString());
 
         itemsFile.insert(rowsData);
 //        List<String> itemsData = itemsFile.read();
@@ -37,7 +38,6 @@ public class Main {
 //        System.out.println(scrape.getItem().getPrice().getAfterDiscount());
 //        System.out.println(scrape.getItem().getPrice().getCurrency());
 //        System.out.println(scrape.getDate());
-
 
 
     }

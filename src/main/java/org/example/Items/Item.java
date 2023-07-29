@@ -15,6 +15,7 @@ public class Item {
         setModelName(modelName);
         setPrice(price);
     }
+
     public Item(String brandName, String modelName, String color, String availability, Price price) {
         setBrandName(brandName);
         setColor(color);
@@ -47,21 +48,23 @@ public class Item {
         this.color = color;
     }
 
-    public boolean isInStock() {
+    public boolean getIsInStock() {
         return IsInStock;
     }
 
     public void setInStock(boolean inStock) {
         this.IsInStock = inStock;
     }
-    public boolean setInStock(String availability)
-    {
-        if(availability == null)
-        {
-            return true;
+
+    public void setInStock(String availability) {
+        if (availability.isEmpty()) {
+            this.IsInStock = true;
         }
-        return false;
+        else {
+            this.IsInStock = false;
+        }
     }
+
     public Price getPrice() {
         return price;
     }
@@ -70,8 +73,4 @@ public class Item {
         this.price = price;
     }
 
-    public void saveToFile()
-    {
-
-    }
 }
