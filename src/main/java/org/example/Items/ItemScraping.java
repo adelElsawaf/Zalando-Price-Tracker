@@ -29,8 +29,7 @@ public class ItemScraping {
         Elements modelName = scraper.getElementsByClass("EKabf7 R_QwOV");
         Elements color = scraper.getElementsByClass("KxHAYs lystZ1 dgII7d HlZ_Tf zN9KaA");
         Elements availability = scraper.getElementsByClass("KxHAYs MnJKTe FxZV-M HlZ_Tf");
-        Item scrappedItem = new Item(brandName.text(), modelName.text(), color.text(), availability.text(), scrapPrice());
-        return scrappedItem;
+        return new Item(brandName.text(), modelName.text(), color.text(), availability.text(), scrapPrice());
     }
 
     private Price scrapPrice() throws IOException {
