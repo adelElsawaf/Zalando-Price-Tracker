@@ -2,12 +2,10 @@ package org.example.Items;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
 
 public class ItemScraping {
     private Item item;
@@ -20,11 +18,8 @@ public class ItemScraping {
         this.scraper= Jsoup.connect(URL).get();
     }
 
-    public ItemScraping() {
-    }
-
     public Item startScraping() throws IOException {
-        scrapeItem();
+        setItem(scrapeItem());
         setDate(LocalDate.now());
         return getItem();
     }
@@ -34,8 +29,8 @@ public class ItemScraping {
         Elements modelName = scraper.getElementsByClass("EKabf7 R_QwOV");
         Elements color = scraper.getElementsByClass("KxHAYs lystZ1 dgII7d HlZ_Tf zN9KaA");
         Elements availability = scraper.getElementsByClass("KxHAYs MnJKTe FxZV-M HlZ_Tf");
-        setItem(new Item(brandName.text(), modelName.text(), color.text(), availability.text(), scrapPrice()));
-        return getItem();
+        Item scrappedItem = new Item(brandName.text(), modelName.text(), color.text(), availability.text(), scrapPrice());
+        return scrappedItem;
     }
 
     private Price scrapPrice() throws IOException {

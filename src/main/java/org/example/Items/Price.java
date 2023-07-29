@@ -60,16 +60,16 @@ public class Price {
     }
 
     private static String getDigitsFromString(String sentence) {
-        String digits = "";
+        StringBuilder digits = new StringBuilder();
         for (int letterIndex = 0; letterIndex < sentence.length(); letterIndex++) {
             if (sentence.charAt(letterIndex) == ',') {
-                digits += '.';
+                digits.append('.');
             }
             if (sentence.charAt(letterIndex) >= '0' && sentence.charAt(letterIndex) <= '9') {
-                digits += sentence.charAt(letterIndex);
+                digits.append(sentence.charAt(letterIndex));
             }
         }
-        return digits;
+        return digits.toString();
     }
 
 

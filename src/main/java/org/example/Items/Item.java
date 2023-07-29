@@ -57,12 +57,7 @@ public class Item {
     }
 
     public void setInStock(String availability) {
-        if (availability.isEmpty()) {
-            this.IsInStock = true;
-        }
-        else {
-            this.IsInStock = false;
-        }
+        this.IsInStock = availability.isEmpty();
     }
 
     public Price getPrice() {
