@@ -42,6 +42,9 @@ public class Price {
     public void setAfterDiscount(double afterDiscount) {
         this.afterDiscount = afterDiscount;
     }
+    public void setAfterDiscount(String afterDiscount) {
+        this.afterDiscount = getPriceFromPriceMessage(afterDiscount);
+    }
 
     public String getCurrency() {
         return currency;

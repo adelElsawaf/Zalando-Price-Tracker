@@ -1,16 +1,21 @@
 package org.example.Items;
 
 public class Item {
+
+
+    private String Id;
     private String brandName;
     private String modelName;
-    //private String size;
+    private String size;
     private String color;
-    private boolean IsInStock;
+    private String availability;
     private Price price;
 
-    public Item(String brandName, String modelName, String color, boolean isInStock, Price price) {
+    public Item(String id,String brandName, String modelName , String size, String color, String isInStock, Price price) {
+        setId(id);
         setBrandName(brandName);
         setColor(color);
+        setSize(size);
         setInStock(isInStock);
         setModelName(modelName);
         setPrice(price);
@@ -22,6 +27,29 @@ public class Item {
         setInStock(availability);
         setModelName(modelName);
         setPrice(price);
+    }
+    public Item(String brandName, String modelName,String size ,String color, String availability) {
+        setBrandName(brandName);
+        setColor(color);
+        setSize(size);
+        setInStock(availability);
+        setModelName(modelName);
+
+    }
+    public String getId() {
+        return Id;
+    }
+
+    public void setId(String id) {
+        Id = id;
+    }
+
+    public String getSizes() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
     }
 
     public String getBrandName() {
@@ -48,17 +76,14 @@ public class Item {
         this.color = color;
     }
 
-    public boolean getIsInStock() {
-        return IsInStock;
+    public String getAvailability() {
+        return availability;
     }
 
-    public void setInStock(boolean inStock) {
-        this.IsInStock = inStock;
+    public void setInStock(String inStock) {
+        this.availability = inStock;
     }
 
-    public void setInStock(String availability) {
-        this.IsInStock = availability.isEmpty();
-    }
 
     public Price getPrice() {
         return price;
