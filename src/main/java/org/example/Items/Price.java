@@ -59,21 +59,21 @@ public class Price {
     }
 
     public static double getPriceFromPriceMessage(String priceMessage) {
-        return Double.parseDouble(getDigitsFromString(priceMessage));
+        priceMessage = getDigitsFromString(priceMessage);
+        priceMessage = priceMessage.replace(',','.');
+        return Double.parseDouble(priceMessage);
     }
 
     private static String getDigitsFromString(String sentence) {
         StringBuilder digits = new StringBuilder();
         for (int letterIndex = 0; letterIndex < sentence.length(); letterIndex++) {
-            if (sentence.charAt(letterIndex) == ',') {
-                digits.append('.');
-            }
-            if (sentence.charAt(letterIndex) >= '0' && sentence.charAt(letterIndex) <= '9') {
+            if (sentence.charAt(letterIndex) >= '0' && sentence.charAt(letterIndex) <= '9' || sentence.charAt(letterIndex) == ',') {
                 digits.append(sentence.charAt(letterIndex));
             }
         }
         return digits.toString();
     }
+
 
 
 }

@@ -6,6 +6,8 @@ import org.jsoup.select.Elements;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -16,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemScraping {
-    private Item item;
+
     private Document jsoupScraper;
     private String URL;
     private LocalDate date;
@@ -27,8 +29,7 @@ public class ItemScraping {
     public ItemScraping(String URL) throws IOException {
         this.URL = URL;
         this.jsoupScraper = Jsoup.connect(URL).get();
-        ChromeOptions options = new ChromeOptions();
-        seleniumScraper = new ChromeDriver(options);
+        seleniumScraper = new EdgeDriver();
         seleniumScraper.get(URL);
         allSizesDiv = getAllSizesDiv();
     }
@@ -48,23 +49,11 @@ public class ItemScraping {
     }
     public  List<Item> startScraping() throws IOException {
         List<Item> scrappedItems = scrapeItemVariations();
-        for (int i = 0; i < scrappedItems.size(); i++) {
-            setItem(scrappedItems.get(i));
-            System.out.println(item.getSizes());
-            System.out.println(item.getPrice().getBeforeDiscount());
-            System.out.println(item.getPrice().getAfterDiscount());
-            System.out.println(item.getPrice().getCurrency().hashCode());
-            System.out.println(item.getAvailability());
-            System.out.println(item.getId());
-            System.out.println("-----------------------------------------------------------------------");
-        }
         setDate(LocalDate.now());
-        System.out.println(getDate());
+        seleniumScraper.quit();
         return scrappedItems;
     }
-
     private List<Item> scrapeItemVariations() throws IOException {
-
         String brandName = jsoupScraper.getElementsByClass("_6zR8Lt QdlUSH FxZV-M HlZ_Tf _5Yd-hZ").text();
         String modelName = jsoupScraper.getElementsByClass("EKabf7 R_QwOV").text();
         String color = jsoupScraper.getElementsByClass("KxHAYs lystZ1 dgII7d HlZ_Tf zN9KaA").text();
@@ -101,14 +90,13 @@ public class ItemScraping {
     private String scrapOriginalPriceMessage() {
         Elements originalPriceMessage = jsoupScraper.getElementsByClass("KxHAYs _4sa1cA FxZV-M Yb63TQ ZiDB59");
         if (originalPriceMessage.size() != 0)
-            return originalPriceMessage.text();
+            return originalPriceMessage.get(0).text();
         originalPriceMessage = jsoupScraper.getElementsByClass("KxHAYs lystZ1 FxZV-M Yb63TQ ZiDB59 _3LATVU");
         if (originalPriceMessage.size() != 0)
-            return originalPriceMessage.text();
+            return originalPriceMessage.get(0).text();
         originalPriceMessage = jsoupScraper.getElementsByClass("KxHAYs _4sa1cA FxZV-M HlZ_Tf");
         if (originalPriceMessage.size() != 0)
-            return originalPriceMessage.text();
-
+            return originalPriceMessage.get(0).text();
         return null;
     }
 
@@ -184,10 +172,6 @@ public class ItemScraping {
         }
         return "Out Of Stock";
     }
-
-
-
-
     private String scrapSizeInSizesDiv(int elementIndex) {
         if (allSizesDiv != null) {
             WebElement itemSizeElement;
@@ -199,16 +183,6 @@ public class ItemScraping {
             return itemSizeElement.getText();
         }
         return "1n";
-    }
-
-
-
-    public void setItem(Item item) {
-        this.item = item;
-    }
-
-    public Item getItem() {
-        return item;
     }
 
     public void setDate(LocalDate date) {
