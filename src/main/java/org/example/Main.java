@@ -5,6 +5,7 @@ import org.example.FileHandler.XlsxFile;
 import org.example.Items.Item;
 import org.example.Items.ItemScraping;
 import org.example.Urls.ItemsUrlScrapping;
+import org.example.Urls.LeftNavbarUrlScrapping;
 
 
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.util.List;
 
 
 public class Main {
-    public void testUrlScrapping() throws IOException {
+    public static void testUrlScrapping() throws IOException {
         ItemsUrlScrapping test = new ItemsUrlScrapping("https://en.zalando.de/outlet-mens-clothing/");
         List<String> testUrls = test.getItemsUrls();
         XlsxFile file = new XlsxFile("database/items_data.xlsx", "URLS");
@@ -25,7 +26,7 @@ public class Main {
     }
 
 
-    public void testMultipleItemScrapping() throws IOException {
+    public static void testMultipleItemScrapping() throws IOException {
         XlsxFile urlsSheetFile = new XlsxFile("database/items_data.xlsx", "URLS");
         XlsxFile itemsSheetFile = new XlsxFile("database/items_data.xlsx", "items_data");
         List<List<String>> allItemsUrls = urlsSheetFile.getFileData();
@@ -52,7 +53,7 @@ public class Main {
         }
     }
 
-    public void testIndividualURL() throws IOException {
+    public static void testIndividualURL() throws IOException {
         ItemScraping scrapeInformation = new ItemScraping("https://en.zalando.de/pier-one-bow-tie-beige-pi952r02v-b12.html");
         List<Item> scrappedItems = scrapeInformation.startScraping();
         List<String> ItemData = new ArrayList<>();
@@ -70,10 +71,17 @@ public class Main {
 
         }
     }
+    public static void testLeftNavbarUrlScrapping() throws IOException {
+        XlsxFile urlsSheetFile = new XlsxFile("database/URLS.xlsx", "Side nav");
+        LeftNavbarUrlScrapping test = new LeftNavbarUrlScrapping("https://en.zalando.de/mens-clothing/");
+        List<String> urls = test.getUrls();
+        for (String url:urls) {
+            urlsSheetFile.appendCell(0,url);
+        }
+    }
 
     public static void main(String[] args) throws IOException {
-        Main m = new Main();
-        m.testIndividualURL();
+        testLeftNavbarUrlScrapping();
 //        ItemScraping scrapeInformation = new ItemScraping("https://en.zalando.de/vans-ultrarange-exo-trainers-va215o04f-q11.html");
 //        List<Item> scrappedItems = scrapeInformation.startScraping();
 //        XlsxFile test = new XlsxFile("database/items_data.xlsx", "items_data");
