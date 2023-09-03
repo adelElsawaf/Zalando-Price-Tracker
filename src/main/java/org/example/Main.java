@@ -8,12 +8,14 @@ import org.example.Urls.ItemsUrlScrapping;
 
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class Main {
-    public void testUrlScrapping() throws IOException {
+    public static void testUrlScrapping() throws IOException {
         ItemsUrlScrapping test = new ItemsUrlScrapping("https://en.zalando.de/outlet-mens-clothing/");
         List<String> testUrls = test.getItemsUrls();
         XlsxFile file = new XlsxFile("database/items_data.xlsx", "URLS");
@@ -25,7 +27,7 @@ public class Main {
     }
 
 
-    public void testMultipleItemScrapping() throws IOException {
+    public static void testMultipleItemScrapping() throws IOException {
         XlsxFile urlsSheetFile = new XlsxFile("database/items_data.xlsx", "URLS");
         XlsxFile itemsSheetFile = new XlsxFile("database/items_data.xlsx", "items_data");
         List<List<String>> allItemsUrls = urlsSheetFile.getFileData();
@@ -72,8 +74,12 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-        Main m = new Main();
-        m.testIndividualURL();
+        long start = System.currentTimeMillis();
+        //testUrlScrapping();
+        testMultipleItemScrapping();
+        long end = System.currentTimeMillis();
+        NumberFormat formatter = new DecimalFormat("#0.00000");
+        System.out.print("Execution time is " + formatter.format((end - start) / 1000d) + " seconds");
 //        ItemScraping scrapeInformation = new ItemScraping("https://en.zalando.de/vans-ultrarange-exo-trainers-va215o04f-q11.html");
 //        List<Item> scrappedItems = scrapeInformation.startScraping();
 //        XlsxFile test = new XlsxFile("database/items_data.xlsx", "items_data");
