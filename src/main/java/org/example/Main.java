@@ -75,18 +75,8 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-<<<<<<< HEAD
-        //testMultipleItemScrapping();
         System.out.println(testIndividualURL("https://en.zalando.de/gt-collection-tiger-eye-onyx-flat-bead-bracelet-black-gt552l00j-q11.html"));
-
-=======
-        long start = System.currentTimeMillis();
-        //testUrlScrapping();
-        testMultipleItemScrapping();
-        long end = System.currentTimeMillis();
-        NumberFormat formatter = new DecimalFormat("#0.00000");
-        System.out.print("Execution time is " + formatter.format((end - start) / 1000d) + " seconds");
->>>>>>> master
+        //testMultipleItemScrapping();
 //        ItemScraping scrapeInformation = new ItemScraping("https://en.zalando.de/vans-ultrarange-exo-trainers-va215o04f-q11.html");
 //        List<Item> scrappedItems = scrapeInformation.startScraping();
 //        XlsxFile test = new XlsxFile("database/items_data.xlsx", "items_data");
