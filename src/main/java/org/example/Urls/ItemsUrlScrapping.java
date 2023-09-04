@@ -35,7 +35,7 @@ public class ItemsUrlScrapping {
         for (int elementIndex = 0; elementIndex < scrappedAnchorElements.size(); elementIndex++) {
             String itemUrl = scrappedAnchorElements.get(elementIndex).getAttribute("href");
             if (isValidItemUrl(itemUrl)) {
-                Urls.add(scrappedAnchorElements.get(elementIndex).getAttribute("href"));
+                Urls.add(itemUrl);
             }
         }
         return Urls;
