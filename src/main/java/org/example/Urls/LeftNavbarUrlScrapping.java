@@ -18,7 +18,7 @@ public class LeftNavbarUrlScrapping {
     }
 
     public List<String> getUrls() {
-        List<WebElement> scrappedAnchorElements = seleniumScraper.findElements(By.cssSelector("a[class='Ny1wrl JT3_zV CKDt_l LyRfpJ HlZ_Tf DJxzzA wTFXcM Vp9qYE _5Yd-hZ']"));
+        List<WebElement> scrappedAnchorElements = seleniumScraper.findElements(By.cssSelector("a[class='_ZDS_REF_SCOPE_ CDD5jc l9TUOd CKDt_l LyRfpJ JT3_zV DJxzzA wTFXcM _5Yd-hZ']"));
         List<String> Urls = new ArrayList<>();
         for (int elementIndex = 0; elementIndex < scrappedAnchorElements.size(); elementIndex++) {
             scrappedAnchorElements.get(elementIndex).getAttribute("href");

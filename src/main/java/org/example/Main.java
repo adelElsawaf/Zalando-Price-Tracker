@@ -19,7 +19,7 @@ public class Main {
     public static void testUrlScrapping() throws IOException {
         ItemsUrlScrapping test = new ItemsUrlScrapping("https://en.zalando.de/outlet-mens-clothing/");
         List<String> testUrls = test.getItemsUrls();
-        XlsxFile file = new XlsxFile("database/items_data.xlsx", "URLS");
+        XlsxFile file = new XlsxFile("database/URLS.xlsx", "URLS");
 
         for (int i = 0; i < testUrls.size(); i++) {
             file.appendCell(0, testUrls.get(i));
@@ -77,7 +77,7 @@ public class Main {
         return ItemData;
     }
     public static void testLeftNavbarUrlScrapping() throws IOException {
-        XlsxFile urlsSheetFile = new XlsxFile("database/URLS.xlsx", "Side nav");
+        XlsxFile urlsSheetFile = new XlsxFile("database/urls.xlsx", "Side nav");
         LeftNavbarUrlScrapping test = new LeftNavbarUrlScrapping("https://en.zalando.de/mens-clothing/");
         List<String> urls = test.getUrls();
         for (String url:urls) {
@@ -86,7 +86,7 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-        System.out.println(testIndividualURL("https://en.zalando.de/gt-collection-tiger-eye-onyx-flat-bead-bracelet-black-gt552l00j-q11.html"));
+        //System.out.println(testIndividualURL("https://en.zalando.de/gt-collection-tiger-eye-onyx-flat-bead-bracelet-black-gt552l00j-q11.html"));
         //testMultipleItemScrapping();
         testLeftNavbarUrlScrapping();
 //        ItemScraping scrapeInformation = new ItemScraping("https://en.zalando.de/vans-ultrarange-exo-trainers-va215o04f-q11.html");
