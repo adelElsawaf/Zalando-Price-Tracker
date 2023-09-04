@@ -16,6 +16,7 @@ public class ItemScraping {
     private LocalDate date;
     private WebDriver seleniumScraper;
     private WebElement allSizesDiv;
+    int sizeDivIterator = 1;
 
 
     public ItemScraping(String URL) {
@@ -48,17 +49,17 @@ public class ItemScraping {
     }
 
     private List<Item> scrapeItemVariations() {
-        String brandName = seleniumScraper.findElement(By.cssSelector("h3[class='_6zR8Lt QdlUSH FxZV-M HlZ_Tf _5Yd-hZ']")).getText();
+        String brandName = seleniumScraper.findElement(By.cssSelector("h3[class='FtrEr_ QdlUSH FxZV-M HlZ_Tf _5Yd-hZ']")).getText();
         String modelName = seleniumScraper.findElement(By.cssSelector("span[class='EKabf7 R_QwOV']")).getText();
-        String color = seleniumScraper.findElement(By.cssSelector("p[class='KxHAYs lystZ1 dgII7d HlZ_Tf zN9KaA']")).getText();
+        String color = seleniumScraper.findElement(By.cssSelector("p[class='sDq_FX lystZ1 dgII7d HlZ_Tf zN9KaA']")).getText();
         List<Item> scrappedItems = new ArrayList<>();
-        int sizeDivIterator = 1;
+
         if (allSizesDiv != null) {
             while (true) {
                 try {
-                    String availability = scrapItemAvailability(sizeDivIterator);
-                    String size = scrapSizeInSizesDiv(sizeDivIterator);
-                    Price itemPrice = scrapItemPrice(sizeDivIterator);
+                    String availability = scrapItemAvailability();
+                    String size = scrapSizeInSizesDiv();
+                    Price itemPrice = scrapItemPrice();
                     scrappedItems.add(new Item(generateItemId(size), brandName, modelName, size, color, availability, itemPrice));
                     sizeDivIterator++;
                 } catch (Error e) {
@@ -67,10 +68,9 @@ public class ItemScraping {
 
             }
         } else {
-            // ask bondoq in sizeDivIterator
-            String availability = scrapItemAvailability(sizeDivIterator);
-            String size = scrapSizeInSizesDiv(sizeDivIterator);
-            Price itemPrice = scrapItemPrice(sizeDivIterator);
+            String availability = scrapItemAvailability();
+            String size = scrapSizeInSizesDiv();
+            Price itemPrice = scrapItemPrice();
             scrappedItems.add(new Item(generateItemId(size), brandName, modelName, size, color, availability, itemPrice));
         }
         return scrappedItems;
@@ -85,13 +85,13 @@ public class ItemScraping {
     }
 
     private String scrapOriginalPriceMessage() {
-        List<WebElement> originalPriceMessage = seleniumScraper.findElements(By.cssSelector("p[class='KxHAYs lystZ1 FxZV-M Yb63TQ ZiDB59']"));
+        List<WebElement> originalPriceMessage = seleniumScraper.findElements(By.cssSelector("p[class='sDq_FX _4sa1cA FxZV-M Yb63TQ ZiDB59']"));
         if (!originalPriceMessage.isEmpty())
             return originalPriceMessage.get(0).getText();
-        originalPriceMessage = seleniumScraper.findElements(By.cssSelector("p[class='KxHAYs lystZ1 FxZV-M Yb63TQ ZiDB59 _3LATVU']"));
+        originalPriceMessage = seleniumScraper.findElements(By.cssSelector("span[class='sDq_FX lystZ1 FxZV-M Yb63TQ ZiDB59 _3LATVU']"));
         if (!originalPriceMessage.isEmpty())
             return originalPriceMessage.get(0).getText();
-        originalPriceMessage = seleniumScraper.findElements(By.cssSelector("h3[class='KxHAYs _4sa1cA FxZV-M HlZ_Tf']"));
+        originalPriceMessage = seleniumScraper.findElements(By.cssSelector("span[class='sDq_FX _4sa1cA FxZV-M HlZ_Tf']"));
         if (!originalPriceMessage.isEmpty())
             return originalPriceMessage.get(0).getText();
         return null;
@@ -107,15 +107,15 @@ public class ItemScraping {
         return null;
     }
 
-    private Price scrapItemPrice(int elementIndex) {
+    private Price scrapItemPrice() {
         String discountPriceMessage = scrapDiscountPriceMessage();
         String originalPriceMessage = scrapOriginalPriceMessage();
         if (discountPriceMessage == null) {
             return new Price(originalPriceMessage);
         } else {
-            String itemPriceInSizeDiv = scrapPriceInSizesDiv(elementIndex);
+            String itemPriceInSizeDiv = scrapPriceInSizesDiv();
             if (itemPriceInSizeDiv == null) {
-                if (scrapAvailabilityInSizesDiv(elementIndex).contains("N"))
+                if (scrapAvailabilityInSizesDiv().contains("N"))
                     return new Price(originalPriceMessage);
                 else
                     return new Price(originalPriceMessage, discountPriceMessage);
@@ -125,11 +125,11 @@ public class ItemScraping {
         }
     }
 
-    private String scrapPriceInSizesDiv(int elementIndex) {
+    private String scrapPriceInSizesDiv() {
         if (allSizesDiv != null) {
             WebElement itemPriceElement;
             try {
-                itemPriceElement = allSizesDiv.findElement(By.cssSelector("div.YuYw-E:nth-child(" + elementIndex + ") > div:nth-child(2) > label:nth-child(1) > span:nth-child(1) > div:nth-child(1) > span:nth-child(2)"));
+                itemPriceElement = allSizesDiv.findElement(By.cssSelector("div.YuYw-E:nth-child(" + sizeDivIterator + ") > div:nth-child(2) > label:nth-child(1) > span:nth-child(1) > div:nth-child(1) > span:nth-child(2)"));
             } catch (NoSuchElementException e) {
                 return null;
             }
@@ -139,16 +139,16 @@ public class ItemScraping {
     }
     private boolean isItemAvailableInMainPage(){
         try {
-            seleniumScraper.findElement(By.cssSelector("h2[class='KxHAYs MnJKTe FxZV-M HlZ_Tf']"));
+            seleniumScraper.findElement(By.cssSelector("h2[class='sDq_FX MnJKTe FxZV-M HlZ_Tf']"));
             return true;
         }catch (NoSuchElementException e){
             return false;
         }
     }
-    private String scrapItemAvailability(int elementIndex) {
+    private String scrapItemAvailability() {
         if (!isItemAvailableInMainPage()) {
             if (allSizesDiv != null) {
-                String availabilityInSizeDiv = scrapAvailabilityInSizesDiv(elementIndex);
+                String availabilityInSizeDiv = scrapAvailabilityInSizesDiv();
                 if (availabilityInSizeDiv.contains("N")) {
                     return "Out Of Stock";
                 } else {
@@ -163,11 +163,11 @@ public class ItemScraping {
         }
     }
 
-    private String scrapAvailabilityInSizesDiv(int elementIndex) {
+    private String scrapAvailabilityInSizesDiv() {
         if (allSizesDiv != null) {
             WebElement itemAvailabilityElement;
             try {
-                itemAvailabilityElement = allSizesDiv.findElement(By.cssSelector("div.YuYw-E:nth-child(" + elementIndex + ") > div:nth-child(2) > label:nth-child(1) > div:nth-child(2) > span:nth-child(1)"));
+                itemAvailabilityElement = allSizesDiv.findElement(By.cssSelector("div.YuYw-E:nth-child(" + sizeDivIterator + ") > div:nth-child(2) > label:nth-child(1) > div:nth-child(2) > span:nth-child(1)"));
             } catch (NoSuchElementException e) {
                 return "In stock";
             }
@@ -176,11 +176,11 @@ public class ItemScraping {
         return "Out Of Stock";
     }
 
-    private String scrapSizeInSizesDiv(int elementIndex) {
+    private String scrapSizeInSizesDiv() {
         if (allSizesDiv != null) {
             WebElement itemSizeElement;
             try {
-                itemSizeElement = allSizesDiv.findElement(By.cssSelector("div.YuYw-E:nth-child(" + elementIndex + ") > div:nth-child(2) > label:nth-child(1) > span:nth-child(1) > div:nth-child(1) > span:nth-child(1)"));
+                itemSizeElement = allSizesDiv.findElement(By.cssSelector("div.YuYw-E:nth-child(" + sizeDivIterator + ") > div:nth-child(2) > label:nth-child(1) > span:nth-child(1) > div:nth-child(1) > span:nth-child(1)"));
             } catch (NoSuchElementException e) {
                 throw new Error("No More Elements");
             }

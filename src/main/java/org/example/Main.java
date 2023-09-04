@@ -52,8 +52,8 @@ public class Main {
         }
     }
 
-    public static void testIndividualURL() throws IOException {
-        ItemScraping scrapeInformation = new ItemScraping("https://en.zalando.de/pier-one-bow-tie-beige-pi952r02v-b12.html");
+    public static List testIndividualURL(String URL) throws IOException {
+        ItemScraping scrapeInformation = new ItemScraping(URL);
         List<Item> scrappedItems = scrapeInformation.startScraping();
         List<String> ItemData = new ArrayList<>();
         for (Item scrappedItem : scrappedItems) {
@@ -69,10 +69,13 @@ public class Main {
             ItemData.add(scrapeInformation.getDate().toString());
 
         }
+        return ItemData;
     }
 
     public static void main(String[] args) throws IOException {
-        testMultipleItemScrapping();
+        //testMultipleItemScrapping();
+        System.out.println(testIndividualURL("https://en.zalando.de/gt-collection-tiger-eye-onyx-flat-bead-bracelet-black-gt552l00j-q11.html"));
+
 //        ItemScraping scrapeInformation = new ItemScraping("https://en.zalando.de/vans-ultrarange-exo-trainers-va215o04f-q11.html");
 //        List<Item> scrappedItems = scrapeInformation.startScraping();
 //        XlsxFile test = new XlsxFile("database/items_data.xlsx", "items_data");
