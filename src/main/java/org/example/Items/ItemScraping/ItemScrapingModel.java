@@ -1,5 +1,8 @@
-package org.example.Items;
+package org.example.Items.ItemScraping;
 
+import org.example.Items.Item;
+import org.example.Items.ItemVariation;
+import org.example.Items.Price;
 import org.openqa.selenium.*;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -7,10 +10,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
-public class ItemScraping {
+public class ItemScrapingModel {
 
     private String URL;
     private LocalDate date;
@@ -19,7 +21,7 @@ public class ItemScraping {
     int sizeDivIterator = 1;
 
 
-    public ItemScraping(String URL) {
+    public ItemScrapingModel(String URL) {
         this.URL = URL;
         seleniumScraper = new EdgeDriver();
         seleniumScraper.get(URL);
@@ -41,48 +43,45 @@ public class ItemScraping {
         return allSizesDiv;
     }
 
-    public List<Item> startScraping() {
-        List<Item> scrappedItems = scrapeItemVariations();
+    public Item startScraping() {
+        Item scrappedItems = scrapeItemVariations();
         setDate(LocalDate.now());
         seleniumScraper.quit();
         return scrappedItems;
     }
 
-    private List<Item> scrapeItemVariations() {
+    private Item scrapeItemVariations() {
         String brandName = seleniumScraper.findElement(By.cssSelector("h3[class='FtrEr_ QdlUSH FxZV-M HlZ_Tf _5Yd-hZ']")).getText();
         String modelName = seleniumScraper.findElement(By.cssSelector("span[class='EKabf7 R_QwOV']")).getText();
-        String color = seleniumScraper.findElement(By.cssSelector("p[class='sDq_FX lystZ1 dgII7d HlZ_Tf zN9KaA']")).getText();
-        List<Item> scrappedItems = new ArrayList<>();
-
+        String color = seleniumScraper.findElement(By.cssSelector("span[class='sDq_FX lystZ1 dgII7d HlZ_Tf zN9KaA']")).getText();
+        Item scrappedItem = new Item(getItemIdFromURL(),brandName,modelName);
         if (allSizesDiv != null) {
             while (true) {
                 try {
                     String availability = scrapItemAvailability();
                     String size = scrapSizeInSizesDiv();
-                    Price itemPrice = scrapItemPrice();
-                    scrappedItems.add(new Item(generateItemId(size), brandName, modelName, size, color, availability, itemPrice));
+                    Price variationPrice = scrapItemPrice();
+                    ItemVariation entry = new ItemVariation(size,color,availability,variationPrice);
+                    scrappedItem.getVariationList().add(entry);
                     sizeDivIterator++;
                 } catch (Error e) {
                     break;
                 }
-
             }
         } else {
             String availability = scrapItemAvailability();
             String size = scrapSizeInSizesDiv();
-            Price itemPrice = scrapItemPrice();
-            scrappedItems.add(new Item(generateItemId(size), brandName, modelName, size, color, availability, itemPrice));
+            Price variationPrice = scrapItemPrice();
+            scrappedItem.getVariationList().add((new ItemVariation(size,color,availability,variationPrice)));
+
         }
-        return scrappedItems;
+        return scrappedItem;
     }
 
     private String getItemIdFromURL() {
         return (URL.substring(URL.length() - 18, URL.length() - 5));
     }
 
-    private String generateItemId(String itemSize) {
-        return (getItemIdFromURL() + "-" + itemSize);
-    }
 
     private String scrapOriginalPriceMessage() {
         List<WebElement> originalPriceMessage = seleniumScraper.findElements(By.cssSelector("p[class='sDq_FX _4sa1cA FxZV-M Yb63TQ ZiDB59']"));
@@ -98,10 +97,10 @@ public class ItemScraping {
     }
 
     private String scrapDiscountPriceMessage() {
-        List<WebElement> discountPriceMessage = seleniumScraper.findElements(By.cssSelector("p[class='KxHAYs _4sa1cA dgII7d Km7l2y']"));
+        List<WebElement> discountPriceMessage = seleniumScraper.findElements(By.cssSelector("span[class='sDq_FX _4sa1cA dgII7d Km7l2y']"));
         if (!discountPriceMessage.isEmpty())
             return discountPriceMessage.get(0).getText();
-        discountPriceMessage = seleniumScraper.findElements(By.cssSelector("p[class='KxHAYs _4sa1cA dgII7d Km7l2y _65i7kZ']"));
+        discountPriceMessage = seleniumScraper.findElements(By.cssSelector("p[class='sDq_FX _4sa1cA dgII7d Km7l2y _65i7kZ']"));
         if (!discountPriceMessage.isEmpty())
             return discountPriceMessage.get(0).getText();
         return null;

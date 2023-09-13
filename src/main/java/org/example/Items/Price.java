@@ -1,5 +1,12 @@
 package org.example.Items;
 
+import jakarta.persistence.Embeddable;
+import lombok.Getter;
+import lombok.Setter;
+
+@Embeddable
+@Getter
+@Setter
 public class Price {
     private double beforeDiscount;
     private double afterDiscount;
