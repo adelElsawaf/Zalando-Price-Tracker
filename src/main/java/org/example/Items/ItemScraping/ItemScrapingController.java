@@ -1,6 +1,5 @@
 package org.example.Items.ItemScraping;
 
-import org.example.FileHandler.XlsxFile;
 import org.example.Items.Item;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -25,7 +23,7 @@ public class ItemScrapingController {
         return itemScrappingService.scrapUrlsInFile(filePath, sheetName);
     }
     @GetMapping("/")
-    public Item scrape(@RequestParam(name = "Url") String itemUrl) {
-        return itemScrappingService.scrapIndvidualItem(itemUrl);
+    public List<Item> scrape(@RequestParam(name = "Url") String itemUrl) {
+        return itemScrappingService.scrapIndividualItem(itemUrl);
     }
 }
