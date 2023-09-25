@@ -1,6 +1,7 @@
 package org.example.Items.ItemScraping;
 
-import org.example.Items.Item;
+import com.dropbox.core.DbxException;
+import org.example.Items.ItemModel;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,11 +20,15 @@ public class ItemScrapingController {
     }
 
     @GetMapping("/file")
-    public List<Item> scrapeFileLinks(@RequestParam(name = "filePath") String filePath, @RequestParam(name = "sheetName") String sheetName) throws IOException {
+    public List<ItemModel> scrapeFileLinks(@RequestParam(name = "filePath") String filePath, @RequestParam(name = "sheetName") String sheetName) throws IOException {
         return itemScrappingService.scrapUrlsInFile(filePath, sheetName);
     }
+    @GetMapping("/file/dropbox")
+    public List<ItemModel> scrapeDropboxFileLinks(@RequestParam(name = "filePath") String filePath, @RequestParam(name = "sheetName") String sheetName) throws IOException, DbxException {
+        return itemScrappingService.scrapUrlsInDropBoxFile(filePath, sheetName);
+    }
     @GetMapping("/")
-    public List<Item> scrape(@RequestParam(name = "Url") String itemUrl) {
+    public List<ItemModel> scrape(@RequestParam(name = "Url") String itemUrl) {
         return itemScrappingService.scrapIndividualItem(itemUrl);
     }
 }

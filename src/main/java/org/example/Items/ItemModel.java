@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Entity
 @AllArgsConstructor
-public class Item {
+public class ItemModel {
     @Id
     private String itemId;
     private String brandName;
@@ -24,7 +24,7 @@ public class Item {
     )
     private List<ItemVariation>variationList;
 
-    public Item(String id, String brandName, String modelName) {
+    public ItemModel(String id, String brandName, String modelName) {
         this.itemId = id;
         this.brandName = brandName;
         this.modelName = modelName;

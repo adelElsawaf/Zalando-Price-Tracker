@@ -4,7 +4,9 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.apache.poi.hssf.usermodel.HSSFOptimiser;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -59,7 +61,7 @@ public class XlsxFile {
         createdCell.setCellValue(value);
         saveToFileSystem();
     }
-    public List<List<String>> getFileData(){
+    public List<String> getFileData(){
 
         List<List<String>>allData = new ArrayList<>();
         Iterator<Row> rowIterator = spreadSheet.iterator();
@@ -74,12 +76,24 @@ public class XlsxFile {
             }
             allData.add(rowData);
         }
-        return allData;
+        List<String>flattedData = flatten2DList(allData);
+
+        return removeDuplicates(flattedData);
     }
     private void saveToFileSystem() throws IOException {
         FileOutputStream out = new FileOutputStream(fullFileLocation);
         excelWorkBook.write(out);
         out.close();
+    }
+    private List<String>flatten2DList(List<List<String>> target){
+        List<String>flatList  = target.stream().flatMap(List::stream).collect(Collectors.toList());
+        return flatList;
+    }
+    private List<String>removeDuplicates(List<String> listWithDuplicates){
+        List<String> listWithoutDuplicates = listWithDuplicates.stream()
+                .distinct()
+                .collect(Collectors.toList());
+        return listWithoutDuplicates;
     }
 
 }

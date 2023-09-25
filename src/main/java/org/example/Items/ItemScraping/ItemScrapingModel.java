@@ -1,6 +1,6 @@
 package org.example.Items.ItemScraping;
 
-import org.example.Items.Item;
+import org.example.Items.ItemModel;
 import org.example.Items.ItemVariation;
 import org.example.Items.Price;
 import org.openqa.selenium.*;
@@ -64,11 +64,11 @@ public class ItemScrapingModel {
 
     }
 
-    public static List<Item> scrapItemWithColorVariations(String itemUrl) {
+    public static List<ItemModel> scrapItemWithColorVariations(String itemUrl) {
         prepareBrowser(itemUrl);
         List<String> colorsVariationUrls = scrapColorVariationUrls();
         colorsVariationUrls.add(0,itemUrl);
-        List<Item> allItemVariations = new ArrayList<>();
+        List<ItemModel> allItemVariations = new ArrayList<>();
         for (String colorsVariationUrl : colorsVariationUrls) {
             allItemVariations.add(scrapIndividualItemUrl(colorsVariationUrl));
         }
@@ -76,11 +76,11 @@ public class ItemScrapingModel {
 
     }
 
-    public static Item scrapIndividualItemUrl(String itemUrl) {
+    public static ItemModel scrapIndividualItemUrl(String itemUrl) {
         prepareBrowser(itemUrl);
         String brandName = seleniumScraper.findElement(By.cssSelector("h3[class='FtrEr_ QdlUSH FxZV-M HlZ_Tf _5Yd-hZ']")).getText();
         String modelName = seleniumScraper.findElement(By.cssSelector("span[class='EKabf7 R_QwOV']")).getText();
-        Item scrappedItem = new Item(getItemIdFromURL(itemUrl), brandName, modelName);
+        ItemModel scrappedItem = new ItemModel(getItemIdFromURL(itemUrl), brandName, modelName);
         allSizesDiv = getAllSizesDiv();
         String color = seleniumScraper.findElement(By.cssSelector("span[class='sDq_FX lystZ1 dgII7d HlZ_Tf zN9KaA']")).getText();
         if (allSizesDiv != null) {
