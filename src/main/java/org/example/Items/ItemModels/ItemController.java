@@ -1,4 +1,4 @@
-package org.example.Items;
+package org.example.Items.ItemModels;
 
 import lombok.NoArgsConstructor;
 import org.springframework.web.bind.annotation.*;

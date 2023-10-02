@@ -2,45 +2,50 @@ package org.example.Items.ItemScraping;
 
 import com.dropbox.core.DbxException;
 import lombok.NoArgsConstructor;
-import org.example.FileHandler.Dropbox;
-import org.example.FileHandler.XlsxFile;
-import org.example.Items.ItemModel;
-import org.example.Items.ItemRepository;
+import org.example.FileHandler.DropBox.DropboxModel;
+import org.example.FileHandler.Excel.XlsxFile;
+import org.example.Items.ItemModels.Database.ItemFileRepository;
+import org.example.Items.ItemModels.ItemModel;
+import org.example.Items.ItemModels.Database.ItemDbRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 @NoArgsConstructor
 @Component
 public class ItemScrappingService {
     @Autowired
-    private static ItemRepository itemRepository;
+    private static ItemDbRepository itemRepository;
+
     @Autowired
 
-    public ItemScrappingService(ItemRepository itemRepository) {
+    public ItemScrappingService(ItemDbRepository itemRepository) {
         ItemScrappingService.itemRepository = itemRepository;
     }
 
-    public static List<ItemModel> scrapUrlsInFile(String filePath, String sheetName) throws IOException {
+    public static String scrapUrlsInFile(String filePath, String sheetName) throws IOException, DbxException {
         XlsxFile urlsSheetFile = new XlsxFile(filePath, sheetName);
         List<String> allItemsUrls = urlsSheetFile.getFileData();
         List<ItemModel> allItems = new ArrayList<>();
-        for (int i = 0; i < allItemsUrls.size()-1; i++) {
-                ItemModel scrappedItem = ItemScrapingModel.scrapIndividualItemUrl(allItemsUrls.get(i));
-                allItems.add(scrappedItem);
+        for (int i = 0; i < allItemsUrls.size() - 1; i++) {
+            ItemModel scrappedItem = ItemScrapingModel.scrapIndividualItemUrl(allItemsUrls.get(i));
+            allItems.add(scrappedItem);
         }
         itemRepository.saveAll(allItems);
-        return allItems;
+        return ItemFileRepository.saveAllToExcelFile("database/test.xlsx","items_data",allItems);
     }
-    public static List<ItemModel>scrapUrlsInDropBoxFile(String filePath, String sheetName) throws IOException, DbxException {
-        Dropbox.download("/database/items_data.xlsx",
+
+    public static String scrapUrlsInDropBoxFile(String filePath, String sheetName) throws IOException, DbxException {
+        DropboxModel.download("/database/items_data.xlsx",
                 filePath);
-        return (scrapUrlsInFile(filePath,sheetName));
+        return (scrapUrlsInFile(filePath, sheetName));
     }
+
     public static List<ItemModel> scrapIndividualItem(String itemUrl) {
-        List<ItemModel>allItemVariations = ItemScrapingModel.scrapItemWithColorVariations(itemUrl);
+        List<ItemModel> allItemVariations = ItemScrapingModel.scrapItemWithColorVariations(itemUrl);
         itemRepository.saveAll(allItemVariations);
         return (allItemVariations);
     }

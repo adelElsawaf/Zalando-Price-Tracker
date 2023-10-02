@@ -1,8 +1,7 @@
-package org.example.Items;
+package org.example.Items.ItemModels;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.example.Items.Price;
 
 @Entity
 @AllArgsConstructor

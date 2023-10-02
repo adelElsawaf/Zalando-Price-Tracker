@@ -1,4 +1,4 @@
-package org.example.Items;
+package org.example.Items.ItemModels;
 
 import jakarta.persistence.Embeddable;
 import lombok.Getter;

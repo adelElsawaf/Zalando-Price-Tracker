@@ -1,4 +1,4 @@
-package org.example.Items;
+package org.example.Items.ItemModels;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,21 +13,24 @@ import java.util.List;
 @AllArgsConstructor
 public class ItemModel {
     @Id
-    private String itemId;
+    private String id;
     private String brandName;
     private String modelName;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(
             nullable = false,
             name = "item_id",
-            referencedColumnName = "itemId"
+            referencedColumnName = "id"
     )
-    private List<ItemVariation>variationList;
+    private List<ItemVariation> variationList;
 
     public ItemModel(String id, String brandName, String modelName) {
-        this.itemId = id;
+        this.id = id;
         this.brandName = brandName;
         this.modelName = modelName;
         variationList = new ArrayList<>();
     }
+
+
+
 }

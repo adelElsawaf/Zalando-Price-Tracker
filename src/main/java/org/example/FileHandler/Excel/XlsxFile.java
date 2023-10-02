@@ -1,4 +1,4 @@
-package org.example.FileHandler;
+package org.example.FileHandler.Excel;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -55,6 +55,7 @@ public class XlsxFile {
         }
         saveToFileSystem();
     }
+
     public void appendCell(int columnIndex,String value) throws IOException {
         row = spreadSheet.createRow(spreadSheet.getLastRowNum() + 1);
         Cell createdCell =row.createCell(columnIndex);

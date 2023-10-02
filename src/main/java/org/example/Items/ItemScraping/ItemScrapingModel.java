@@ -1,8 +1,8 @@
 package org.example.Items.ItemScraping;
 
-import org.example.Items.ItemModel;
-import org.example.Items.ItemVariation;
-import org.example.Items.Price;
+import org.example.Items.ItemModels.ItemModel;
+import org.example.Items.ItemModels.ItemVariation;
+import org.example.Items.ItemModels.Price;
 import org.openqa.selenium.*;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
