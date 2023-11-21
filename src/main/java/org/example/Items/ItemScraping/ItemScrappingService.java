@@ -9,6 +9,7 @@ import org.example.Items.ItemModels.ItemModel;
 import org.example.Items.ItemModels.Database.ItemDbRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @NoArgsConstructor
 @Component
+@Service
 public class ItemScrappingService {
     @Autowired
     private static ItemDbRepository itemRepository;
@@ -28,10 +30,12 @@ public class ItemScrappingService {
 
     public static String scrapUrlsInFile(String filePath, String sheetName) throws IOException, DbxException {
         XlsxFile urlsSheetFile = new XlsxFile(filePath, sheetName);
+        ItemScrapingModel itemScrapper = new ItemScrapingModel();
         List<String> allItemsUrls = urlsSheetFile.getFileData();
         List<ItemModel> allItems = new ArrayList<>();
         for (int i = 0; i < allItemsUrls.size() - 1; i++) {
-            ItemModel scrappedItem = ItemScrapingModel.scrapIndividualItemUrl(allItemsUrls.get(i));
+            System.out.println(allItemsUrls.get(i));
+            ItemModel scrappedItem = itemScrapper.scrapIndividualItemUrl(allItemsUrls.get(i));
             allItems.add(scrappedItem);
         }
         itemRepository.saveAll(allItems);
@@ -45,7 +49,8 @@ public class ItemScrappingService {
     }
 
     public static List<ItemModel> scrapIndividualItem(String itemUrl) {
-        List<ItemModel> allItemVariations = ItemScrapingModel.scrapItemWithColorVariations(itemUrl);
+        ItemScrapingModel itemScrapper = new ItemScrapingModel();
+        List<ItemModel> allItemVariations = itemScrapper.scrapItemWithColorVariations(itemUrl);
         itemRepository.saveAll(allItemVariations);
         return (allItemVariations);
     }

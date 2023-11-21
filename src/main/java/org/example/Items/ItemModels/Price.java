@@ -3,6 +3,9 @@ package org.example.Items.ItemModels;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.Setter;
+import org.postgresql.util.PGobject;
+
+import java.sql.Date;
 
 @Embeddable
 @Getter
@@ -11,11 +14,13 @@ public class Price {
     private double beforeDiscount;
     private double afterDiscount;
     private String currency;
+    private Date scrappedAt;
 
-    public Price(double beforeDiscount, double afterDiscount, String currency) {
+    public Price(double beforeDiscount, double afterDiscount, String currency ,Date scrappedAt) {
         setBeforeDiscount(beforeDiscount);
         setAfterDiscount(afterDiscount);
         setCurrency(currency);
+        setScrappedAt(scrappedAt);
     }
 
     public Price(String beforeDiscountPriceMessage, String afterDiscountPriceMessage) {
@@ -29,9 +34,20 @@ public class Price {
         setBeforeDiscount(getPriceFromPriceMessage(beforeDiscountPriceMessage));
         setCurrency(getCurrencyFromPriceMessage(beforeDiscountPriceMessage));
     }
+    public static Price extractFromString (String stringValue){
+        String values[] = stringValue.split(",");
+        return new Price(Double.valueOf(values[0]),Double.valueOf(values[1]),values[2],Date.valueOf(values[3]));
 
+    }
     public Price() {
 
+    }
+    public Date getScrappedAt() {
+        return scrappedAt;
+    }
+
+    public void setScrappedAt(Date scrappedAt) {
+        this.scrappedAt = scrappedAt;
     }
 
     public double getBeforeDiscount() {

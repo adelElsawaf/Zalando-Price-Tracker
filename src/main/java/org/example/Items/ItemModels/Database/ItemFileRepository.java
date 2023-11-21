@@ -19,7 +19,8 @@ public class ItemFileRepository {
                 itemAsStrings.add(allItems.get(i).getId());
                 itemAsStrings.add(allItems.get(i).getBrandName());
                 itemAsStrings.add(allItems.get(i).getModelName());
-                itemAsStrings.add(allItems.get(i).getVariationList().get(j).getColor());
+                itemAsStrings.add(allItems.get(i).getItemColor().getColor());
+                itemAsStrings.add(allItems.get(i).getItemColor().getImageUrl());
                 itemAsStrings.add(allItems.get(i).getVariationList().get(j).getSize());
                 itemAsStrings.add(allItems.get(i).getVariationList().get(j).getAvailability());
                 itemAsStrings.add(String.valueOf(allItems.get(i).getVariationList().get(j).getPrice().getBeforeDiscount()));

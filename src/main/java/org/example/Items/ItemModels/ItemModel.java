@@ -16,6 +16,8 @@ public class ItemModel {
     private String id;
     private String brandName;
     private String modelName;
+    @Embedded
+    private ItemColor itemColor;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(
             nullable = false,
@@ -24,10 +26,12 @@ public class ItemModel {
     )
     private List<ItemVariation> variationList;
 
-    public ItemModel(String id, String brandName, String modelName) {
+
+    public ItemModel(String id, String brandName, String modelName , ItemColor itemColor) {
         this.id = id;
         this.brandName = brandName;
         this.modelName = modelName;
+        this.itemColor = itemColor;
         variationList = new ArrayList<>();
     }
 

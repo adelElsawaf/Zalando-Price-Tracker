@@ -1,5 +1,6 @@
 package org.example.Items.ItemScraping;
 
+import org.example.Items.ItemModels.ItemColor;
 import org.example.Items.ItemModels.ItemModel;
 import org.example.Items.ItemModels.ItemVariation;
 import org.example.Items.ItemModels.Price;
@@ -8,6 +9,8 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.awt.*;
+import java.sql.Date;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,59 +18,55 @@ import java.util.List;
 
 public class ItemScrapingModel {
 
-    private static String URL;
-    private static LocalDate date;
-    private static WebDriver seleniumScraper;
-    private static WebElement allSizesDiv;
+    private  String URL;
+    private  LocalDate date;
+    private  WebDriver seleniumScraper;
+    private  WebElement allSizesDiv;
     static int sizeDivIterator = 1;
 
 
-    private static WebElement getAllSizesDiv() {
-        WebElement allSizesDiv;
+    private  WebElement getAllSizesDiv() {
+        WebElement allSizesDiv = null;
+        try {
             WebDriverWait sizeDivOpener = new WebDriverWait(seleniumScraper, Duration.ofSeconds(10));
             sizeDivOpener.until(ExpectedConditions.elementToBeClickable((By.id("picker-trigger"))));
             WebElement sizeButton = seleniumScraper.findElement(By.id("picker-trigger"));
             sizeButton.click();
-            try {
-                WebDriverWait wait = new WebDriverWait(seleniumScraper, Duration.ofSeconds(5));
-                wait.until(ExpectedConditions.elementToBeClickable((By.className("F8If-J"))));
-                allSizesDiv = seleniumScraper.findElement(By.className("F8If-J"));
-            } catch (TimeoutException timeOut) {
-                allSizesDiv = null;
-            }
+        } catch (TimeoutException timeOut) {
+        }
         return allSizesDiv;
     }
-    private static void openUrl(String URL) {
+
+    private  void openUrl(String URL) {
         seleniumScraper.get(URL);
     }
 
-    private static void openEdgeBrowser() {
+    private  void openEdgeBrowser() {
         seleniumScraper = new EdgeDriver();
         seleniumScraper.manage().window().maximize();
 
     }
 
-    private static void closeBrowser() {
+    private  void closeBrowser() {
         seleniumScraper.quit();
         seleniumScraper = null;
     }
 
-    public static void prepareBrowser(String targetURL) {
+    public  void prepareBrowser(String targetURL) {
         if (seleniumScraper == null) {
             openEdgeBrowser();
             openUrl(targetURL);
 
-        }
-        else {
+        } else {
             openUrl(targetURL);
         }
 
     }
 
-    public static List<ItemModel> scrapItemWithColorVariations(String itemUrl) {
+    public  List<ItemModel> scrapItemWithColorVariations(String itemUrl) {
         prepareBrowser(itemUrl);
         List<String> colorsVariationUrls = scrapColorVariationUrls();
-        colorsVariationUrls.add(0,itemUrl);
+        colorsVariationUrls.add(0, itemUrl);
         List<ItemModel> allItemVariations = new ArrayList<>();
         for (String colorsVariationUrl : colorsVariationUrls) {
             allItemVariations.add(scrapIndividualItemUrl(colorsVariationUrl));
@@ -76,45 +75,66 @@ public class ItemScrapingModel {
 
     }
 
-    public static ItemModel scrapIndividualItemUrl(String itemUrl) {
-        prepareBrowser(itemUrl);
-        String brandName = seleniumScraper.findElement(By.cssSelector("h3[class='FtrEr_ QdlUSH FxZV-M HlZ_Tf _5Yd-hZ']")).getText();
-        String modelName = seleniumScraper.findElement(By.cssSelector("span[class='EKabf7 R_QwOV']")).getText();
-        ItemModel scrappedItem = new ItemModel(getItemIdFromURL(itemUrl), brandName, modelName);
-        allSizesDiv = getAllSizesDiv();
-        String color = seleniumScraper.findElement(By.cssSelector("span[class='sDq_FX lystZ1 dgII7d HlZ_Tf zN9KaA']")).getText();
-        if (allSizesDiv != null) {
-            while (true) {
-                try {
-                    String availability = scrapItemAvailability();
-                    String size = scrapSizeInSizesDiv();
-                    Price variationPrice = scrapItemPrice();
-                    ItemVariation sizePriceVariation = new ItemVariation(size, color, availability, variationPrice);
-                    scrappedItem.getVariationList().add(sizePriceVariation);
-                    sizeDivIterator++;
-                } catch (Error e) {
-                    sizeDivIterator = 1;
-                    break;
+    public  ItemModel scrapIndividualItemUrl(String itemUrl) {
+        ItemModel scrappedItem = null;
+        try {
+            prepareBrowser(itemUrl);
+            String brandName = seleniumScraper.findElement(By.cssSelector("h3[class='FtrEr_ QdlUSH FxZV-M HlZ_Tf _5Yd-hZ']")).getText();
+            String modelName = seleniumScraper.findElement(By.cssSelector("span[class='EKabf7 R_QwOV']")).getText();
+            String color = scrapItemColor();
+            String itemImageUrl = scrapImageUrl();
+            scrappedItem = new ItemModel(getItemIdFromURL(itemUrl), brandName, modelName,new ItemColor(color,itemImageUrl));
+            allSizesDiv = getAllSizesDiv();
+            if (allSizesDiv != null) {
+                while (true) {
+                    try {
+                        String availability = scrapItemAvailability();
+                        String size = scrapSizeInSizesDiv();
+                        Price variationPrice = scrapItemPrice();
+                        variationPrice.setScrappedAt(Date.valueOf(LocalDate.now()));
+                        ItemVariation sizePriceVariation = new ItemVariation(size, availability, variationPrice);
+                        scrappedItem.getVariationList().add(sizePriceVariation);
+                        sizeDivIterator++;
+                    } catch (Error e) {
+                        sizeDivIterator = 1;
+                        break;
+                    }
                 }
-            }
-        } else {
-            String availability = scrapItemAvailability();
-            String size = scrapSizeInSizesDiv();
-            Price variationPrice = scrapItemPrice();
-            scrappedItem.getVariationList().add((new ItemVariation(size, color, availability, variationPrice)));
+            } else {
+                String availability = scrapItemAvailability();
+                String size = scrapSizeInSizesDiv();
+                Price variationPrice = scrapItemPrice();
+                variationPrice.setScrappedAt(Date.valueOf(LocalDate.now()));
+                scrappedItem.getVariationList().add(new ItemVariation(size, availability, variationPrice));
 
+            }
+            closeBrowser();
+        } catch (Error anyError) {
+            scrapIndividualItemUrl(itemUrl);
         }
-        closeBrowser();
         return scrappedItem;
     }
 
+    private  String scrapItemColor() {
+        try {
+            return seleniumScraper.findElement(By.cssSelector("span[class='sDq_FX lystZ1 dgII7d HlZ_Tf zN9KaA']")).getText();
+        } catch (NoSuchElementException NoColorError) {
+            return "ColourLess";
+        }
+    }
 
-    private static String getItemIdFromURL(String itemUrl) {
+    private  String getItemIdFromURL(String itemUrl) {
         return (itemUrl.substring(itemUrl.length() - 18, itemUrl.length() - 5));
     }
 
+    private  String scrapImageUrl() {
+        String imageUrl = seleniumScraper.findElement(By.cssSelector("img[class='sDq_FX lystZ1 FxZV-M _2Pvyxl JT3_zV EKabf7 mo6ZnF _1RurXL mo6ZnF _7ZONEy']")).getAttribute("src");
+        return imageUrl;
+//                imageUrl.substring(0, imageUrl.length() - 3) + "1800";
 
-    private static String scrapOriginalPriceMessage() {
+    }
+
+    private  String scrapOriginalPriceMessage() {
         List<WebElement> originalPriceMessage = seleniumScraper.findElements(By.cssSelector("p[class='sDq_FX _4sa1cA FxZV-M Yb63TQ ZiDB59']"));
         if (!originalPriceMessage.isEmpty())
             return originalPriceMessage.get(0).getText();
@@ -130,7 +150,7 @@ public class ItemScrapingModel {
         return null;
     }
 
-    private static String scrapDiscountPriceMessage() {
+    private  String scrapDiscountPriceMessage() {
         List<WebElement> discountPriceMessage = seleniumScraper.findElements(By.cssSelector("span[class='sDq_FX _4sa1cA dgII7d Km7l2y']"));
         if (!discountPriceMessage.isEmpty())
             return discountPriceMessage.get(0).getText();
@@ -140,7 +160,7 @@ public class ItemScrapingModel {
         return null;
     }
 
-    private static Price scrapItemPrice() {
+    private  Price scrapItemPrice() {
         String discountPriceMessage = scrapDiscountPriceMessage();
         String originalPriceMessage = scrapOriginalPriceMessage();
         if (discountPriceMessage == null) {
@@ -158,7 +178,7 @@ public class ItemScrapingModel {
         }
     }
 
-    private static String scrapPriceInSizesDiv() {
+    private  String scrapPriceInSizesDiv() {
         if (allSizesDiv != null) {
             WebElement itemPriceElement;
             try {
@@ -171,7 +191,7 @@ public class ItemScrapingModel {
         return null;
     }
 
-    private static boolean isItemAvailableInMainPage() {
+    private  boolean isItemAvailableInMainPage() {
         try {
             seleniumScraper.findElement(By.cssSelector("h2[class='sDq_FX MnJKTe FxZV-M HlZ_Tf']"));
             return true;
@@ -180,7 +200,7 @@ public class ItemScrapingModel {
         }
     }
 
-    private static String scrapItemAvailability() {
+    private  String scrapItemAvailability() {
         if (!isItemAvailableInMainPage()) {
             if (allSizesDiv != null) {
                 String availabilityInSizeDiv = scrapAvailabilityInSizesDiv();
@@ -198,7 +218,7 @@ public class ItemScrapingModel {
         }
     }
 
-    private static String scrapAvailabilityInSizesDiv() {
+    private  String scrapAvailabilityInSizesDiv() {
         if (allSizesDiv != null) {
             WebElement itemAvailabilityElement;
             try {
@@ -211,7 +231,7 @@ public class ItemScrapingModel {
         return "Out Of Stock";
     }
 
-    private static String scrapSizeInSizesDiv() {
+    private  String scrapSizeInSizesDiv() {
         if (allSizesDiv != null) {
             WebElement itemSizeElement;
             try {
@@ -224,12 +244,15 @@ public class ItemScrapingModel {
         return "1n";
     }
 
-    private static void expandColorsSection() {
-        WebElement expanderBtn = seleniumScraper.findElement(By.cssSelector("button[class='FCIprz K82if3 NN8L-8 cPQe5j Wu1CzW Rt7sMf _6-WsK3 Md_Vex Nk_Omi _MmCDa _0xLoFW KLaowZ mo6ZnF']"));
-        expanderBtn.click();
+    private void expandColorsSection() {
+        try {
+            WebElement expanderBtn = seleniumScraper.findElement(By.cssSelector("button[class='FCIprz K82if3 NN8L-8 cPQe5j Wu1CzW Rt7sMf _6-WsK3 Md_Vex Nk_Omi _MmCDa _0xLoFW KLaowZ mo6ZnF']"));
+            expanderBtn.click();
+        } catch (NoSuchElementException e) {
+        }
     }
 
-    private static List<String> scrapColorVariationUrls() {
+    private  List<String> scrapColorVariationUrls() {
         int colorDivIterator = 2;
         expandColorsSection();
         List<String> allColorsUrls = new ArrayList<>();
@@ -245,8 +268,8 @@ public class ItemScrapingModel {
 
     }
 
-    public static void setDate(LocalDate date) {
-        ItemScrapingModel.date = date;
+    public  void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public LocalDate getDate() {

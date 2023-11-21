@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("item-scrap")
+@RequestMapping("/item-scrap")
 public class ItemScrapingController {
     ItemScrappingService itemScrappingService;
 

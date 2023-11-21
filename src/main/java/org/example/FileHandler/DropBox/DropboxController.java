@@ -14,7 +14,7 @@ import java.io.IOException;
 public class DropboxController {
     @GetMapping("upload")
     public static String upload (@RequestParam(name = "from") String from,@RequestParam(name = "to") String to) throws IOException, DbxException {
-        DropboxModel.upload(from,to);
-        return DropboxModel.getDownloadLink(to);
+       return DropboxModel.upload(from,to);
+
     }
 }
