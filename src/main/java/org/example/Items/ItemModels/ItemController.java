@@ -10,6 +10,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/items")
 @NoArgsConstructor
+@CrossOrigin
 public class ItemController {
     ItemService itemService = new ItemService();
 

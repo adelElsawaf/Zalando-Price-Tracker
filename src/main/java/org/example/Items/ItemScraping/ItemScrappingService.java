@@ -15,17 +15,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor
-@Component
+
 @Service
 public class ItemScrappingService {
+    private static ItemDbRepository itemDbRepository;
+    ItemScrappingService(){}
     @Autowired
-    private static ItemDbRepository itemRepository;
-
-    @Autowired
-
     public ItemScrappingService(ItemDbRepository itemRepository) {
-        ItemScrappingService.itemRepository = itemRepository;
+        ItemScrappingService.itemDbRepository = itemRepository;
     }
 
     public static String scrapUrlsInFile(String filePath, String sheetName) throws IOException, DbxException {
@@ -38,7 +35,7 @@ public class ItemScrappingService {
             ItemModel scrappedItem = itemScrapper.scrapIndividualItemUrl(allItemsUrls.get(i));
             allItems.add(scrappedItem);
         }
-        itemRepository.saveAll(allItems);
+        itemDbRepository.saveAll(allItems);
         return ItemFileRepository.saveAllToExcelFile("database/test.xlsx","items_data",allItems);
     }
 
@@ -51,7 +48,7 @@ public class ItemScrappingService {
     public static List<ItemModel> scrapIndividualItem(String itemUrl) {
         ItemScrapingModel itemScrapper = new ItemScrapingModel();
         List<ItemModel> allItemVariations = itemScrapper.scrapItemWithColorVariations(itemUrl);
-        itemRepository.saveAll(allItemVariations);
+        itemDbRepository.saveAll(allItemVariations);
         return (allItemVariations);
     }
 

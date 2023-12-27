@@ -2,16 +2,14 @@ package org.example.Items.ItemScraping;
 
 import com.dropbox.core.DbxException;
 import org.example.Items.ItemModels.ItemModel;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/item-scrap")
+@CrossOrigin
 public class ItemScrapingController {
     ItemScrappingService itemScrappingService;
 

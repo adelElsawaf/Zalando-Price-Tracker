@@ -5,16 +5,17 @@ import org.example.Items.ItemModels.ItemModel;
 import org.example.Items.ItemModels.ItemVariation;
 import org.example.Items.ItemModels.Price;
 import org.openqa.selenium.*;
-import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.awt.*;
 import java.sql.Date;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class ItemScrapingModel {
 
@@ -41,8 +42,10 @@ public class ItemScrapingModel {
         seleniumScraper.get(URL);
     }
 
-    private  void openEdgeBrowser() {
-        seleniumScraper = new EdgeDriver();
+    private  void openFireFoxBrowser() {
+        FirefoxOptions options = new FirefoxOptions();
+       options.addArguments("--headless");
+        seleniumScraper = new FirefoxDriver(options);
         seleniumScraper.manage().window().maximize();
 
     }
@@ -54,7 +57,7 @@ public class ItemScrapingModel {
 
     public  void prepareBrowser(String targetURL) {
         if (seleniumScraper == null) {
-            openEdgeBrowser();
+            openFireFoxBrowser();
             openUrl(targetURL);
 
         } else {
@@ -79,7 +82,7 @@ public class ItemScrapingModel {
         ItemModel scrappedItem = null;
         try {
             prepareBrowser(itemUrl);
-            String brandName = seleniumScraper.findElement(By.cssSelector("h3[class='FtrEr_ QdlUSH FxZV-M HlZ_Tf _5Yd-hZ']")).getText();
+            String brandName  =  seleniumScraper.findElement(By.cssSelector("h3[class='FtrEr_ QdlUSH FxZV-M HlZ_Tf _5Yd-hZ']")).getText();
             String modelName = seleniumScraper.findElement(By.cssSelector("span[class='EKabf7 R_QwOV']")).getText();
             String color = scrapItemColor();
             String itemImageUrl = scrapImageUrl();
@@ -114,6 +117,14 @@ public class ItemScrapingModel {
         }
         return scrappedItem;
     }
+
+//    private String scrapItemBrandName(){
+//        WebDriverWait wait = new WebDriverWait(seleniumScraper, Duration.ofSeconds(10));
+//        WebElement element = wait.until(
+//                ExpectedConditions.presenceOfElementLocated(By.cssSelector("h3[class='FtrEr_ QdlUSH FxZV-M HlZ_Tf _5Yd-hZ']")));
+//
+//        return  element.getText();
+//    }
 
     private  String scrapItemColor() {
         try {
