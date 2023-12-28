@@ -18,7 +18,9 @@ import java.util.Optional;
 public class ItemService {
     private static ItemDbRepository itemDBRepository;
 
-    public ItemService(){}
+    public ItemService() {
+    }
+
     @Autowired
     public ItemService(ItemDbRepository itemRepository) {
         ItemService.itemDBRepository = itemRepository;
@@ -27,26 +29,13 @@ public class ItemService {
     public static List<ItemModel> readItems() {
         return itemDBRepository.findAll();
     }
-
-//    public static String exportToFile(String destinationFilePath, String destinationSheetName) throws IOException, DbxException {
-//        List<ItemModel> allItems = itemRepository.findAll();
-//        XlsxFile itemsFile = new XlsxFile(destinationFilePath, destinationSheetName);
-//        for (int i = 0; i < allItems.size(); i++) {
-//            itemsFile.appendRow(allItems.get(i).getItemAsStringList());
-//        }
-//        DropboxModel.upload(destinationFilePath, "/database/items_data.xlsx");
-//        return DropboxModel.getDownloadLink("/database/items_data.xlsx");
-//    }
-    static ItemModel getItemById(String itemId){
+    static ItemModel getItemById(String itemId) {
         return itemDBRepository.findById(itemId).get();
     }
-    static List<Price> getPriceHistory(String itemId,String size ){
-        List<String> priceStrings = itemDBRepository.getItemPriceHistory(itemId,size);
-        List<Price> priceHistory = new ArrayList<>();
-        for (String priceString: priceStrings) {
-                priceHistory.add(Price.extractFromString(priceString));
-        }
-       return priceHistory;
+
+    static List<Price> getPriceHistory(String itemId) {
+        List<Price> priceHistoryList = itemDBRepository.findPriceById(itemId);
+        return priceHistoryList;
     }
 }
 

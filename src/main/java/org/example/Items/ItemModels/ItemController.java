@@ -28,8 +28,8 @@ public class ItemController {
         return ItemService.getItemById(itemId);
     }
     @GetMapping("/{itemId}/price")
-    public List<Price> getItemPriceHistory(@PathVariable(name = "itemId") String itemId, @RequestParam( name = "size") String size){
-        return ItemService.getPriceHistory(itemId,size);
+    public List<Price> getItemPriceHistory(@PathVariable(name = "itemId") String itemId){
+        return ItemService.getPriceHistory(itemId);
     }
 
 }

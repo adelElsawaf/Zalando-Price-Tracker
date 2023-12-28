@@ -1,5 +1,6 @@
 package org.example.Items.ItemModels;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,6 +15,10 @@ public class ItemVariation {
     private String entryId;
     private String size;
     private String availability;
+    @ManyToOne
+    @JoinColumn(name = "item_id",insertable = false,updatable = false)
+    @JsonIgnore
+    private ItemModel item;
     @Embedded
     private Price price;
 

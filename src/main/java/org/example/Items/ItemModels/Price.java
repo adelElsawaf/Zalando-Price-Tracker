@@ -1,6 +1,7 @@
 package org.example.Items.ItemModels;
 
 import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.postgresql.util.PGobject;
@@ -34,11 +35,7 @@ public class Price {
         setBeforeDiscount(getPriceFromPriceMessage(beforeDiscountPriceMessage));
         setCurrency(getCurrencyFromPriceMessage(beforeDiscountPriceMessage));
     }
-    public static Price extractFromString (String stringValue){
-        String values[] = stringValue.split(",");
-        return new Price(Double.valueOf(values[0]),Double.valueOf(values[1]),values[2],Date.valueOf(values[3]));
 
-    }
     public Price() {
 
     }

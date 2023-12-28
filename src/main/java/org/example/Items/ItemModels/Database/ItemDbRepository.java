@@ -10,12 +10,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public interface ItemDbRepository extends JpaRepository<ItemModel, String> {
-    @Query(value = "select before_discount , after_discount , currency,scrapped_at from item_variation where item_variation.item_id = :itemId and size = :size",
-            nativeQuery = true)
-    List<String> getItemPriceHistory(@Param("itemId") String itemId,
-                                       @Param("size") String size);
+    @Query("SELECT iv.price FROM ItemVariation iv WHERE iv.item.id = :id")
+    List<Price> findPriceById(@Param("id") String id);
 
 }
