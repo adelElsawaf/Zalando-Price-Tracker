@@ -29,7 +29,7 @@ public class ItemController {
     }
     @GetMapping("/{itemId}/price")
     public List<Price> getItemPriceHistory(@PathVariable(name = "itemId") String itemId){
-        return ItemService.getPriceHistory(itemId);
+        return itemService.getPriceHistory(itemId);
     }
 
 }

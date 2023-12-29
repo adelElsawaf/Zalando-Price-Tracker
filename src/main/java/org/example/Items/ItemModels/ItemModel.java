@@ -10,7 +10,6 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
-@AllArgsConstructor
 public class ItemModel {
     @Id
     private String id;
@@ -26,15 +25,11 @@ public class ItemModel {
     )
     private List<ItemVariation> variationList;
 
-
-    public ItemModel(String id, String brandName, String modelName , ItemColor itemColor) {
+    public ItemModel(String id, String brandName, String modelName, ItemColor itemColor, List<ItemVariation> variationList) {
         this.id = id;
         this.brandName = brandName;
         this.modelName = modelName;
         this.itemColor = itemColor;
-        variationList = new ArrayList<>();
+        this.variationList = variationList;
     }
-
-
-
 }

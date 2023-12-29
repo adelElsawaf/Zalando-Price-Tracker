@@ -86,8 +86,8 @@ public class ItemScrapingModel {
             String modelName = seleniumScraper.findElement(By.cssSelector("span[class='EKabf7 R_QwOV']")).getText();
             String color = scrapItemColor();
             String itemImageUrl = scrapImageUrl();
-            scrappedItem = new ItemModel(getItemIdFromURL(itemUrl), brandName, modelName,new ItemColor(color,itemImageUrl));
             allSizesDiv = getAllSizesDiv();
+            List<ItemVariation> itemVariationList = new ArrayList<>();
             if (allSizesDiv != null) {
                 while (true) {
                     try {
@@ -96,9 +96,10 @@ public class ItemScrapingModel {
                         Price variationPrice = scrapItemPrice();
                         variationPrice.setScrappedAt(Date.valueOf(LocalDate.now()));
                         ItemVariation sizePriceVariation = new ItemVariation(size, availability, variationPrice);
-                        scrappedItem.getVariationList().add(sizePriceVariation);
+                        itemVariationList.add(sizePriceVariation);
                         sizeDivIterator++;
                     } catch (Error e) {
+                        scrappedItem = new ItemModel(getItemIdFromURL(itemUrl), brandName, modelName,new ItemColor(color,itemImageUrl),itemVariationList);
                         sizeDivIterator = 1;
                         break;
                     }
@@ -108,24 +109,17 @@ public class ItemScrapingModel {
                 String size = scrapSizeInSizesDiv();
                 Price variationPrice = scrapItemPrice();
                 variationPrice.setScrappedAt(Date.valueOf(LocalDate.now()));
-                scrappedItem.getVariationList().add(new ItemVariation(size, availability, variationPrice));
+                itemVariationList.add(new ItemVariation(size, availability, variationPrice));
+                scrappedItem = new ItemModel(getItemIdFromURL(itemUrl), brandName, modelName,new ItemColor(color,itemImageUrl),itemVariationList);
 
             }
             closeBrowser();
         } catch (Error anyError) {
+
             scrapIndividualItemUrl(itemUrl);
         }
         return scrappedItem;
     }
-
-//    private String scrapItemBrandName(){
-//        WebDriverWait wait = new WebDriverWait(seleniumScraper, Duration.ofSeconds(10));
-//        WebElement element = wait.until(
-//                ExpectedConditions.presenceOfElementLocated(By.cssSelector("h3[class='FtrEr_ QdlUSH FxZV-M HlZ_Tf _5Yd-hZ']")));
-//
-//        return  element.getText();
-//    }
-
     private  String scrapItemColor() {
         try {
             return seleniumScraper.findElement(By.cssSelector("span[class='sDq_FX lystZ1 dgII7d HlZ_Tf zN9KaA']")).getText();

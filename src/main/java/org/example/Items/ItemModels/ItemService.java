@@ -26,14 +26,17 @@ public class ItemService {
         ItemService.itemDBRepository = itemRepository;
     }
 
-    public static List<ItemModel> readItems() {
+    public  List<ItemModel> readItems() {
         return itemDBRepository.findAll();
+    }
+    public ItemModel create(ItemModel item){
+        return itemDBRepository.save(item);
     }
     static ItemModel getItemById(String itemId) {
         return itemDBRepository.findById(itemId).get();
     }
 
-    static List<Price> getPriceHistory(String itemId) {
+     List<Price> getPriceHistory(String itemId) {
         List<Price> priceHistoryList = itemDBRepository.findPriceById(itemId);
         return priceHistoryList;
     }
