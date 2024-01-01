@@ -7,7 +7,7 @@ target/
 .idea/modules.xml
 .idea/jarRepositories.xml
 .idea/compiler.xml
-out/
+out/artifacts/Zalando_Price_Tracker_jar
 .idea/libraries/
 *.iws
 *.iml
